@@ -15,6 +15,7 @@ def main():
         action="store_true",
         help="List running Docker container ports",
     )
+    parser.add_argument("-ti","--list_true_images",action="store_true",help="List the images with out None")
     args = parser.parse_args()
 
     dockrichobj = DockrichHelper()
@@ -23,6 +24,8 @@ def main():
         dockrichobj.list_running_containers()
     elif args.running_ports:
         dockrichobj.list_container_ports()
+    elif args.list_true_images:
+        dockrichobj.list_true_without_none()
 
 if __name__ == "__main__":
     main()

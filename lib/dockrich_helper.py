@@ -83,3 +83,28 @@ class DockrichHelper:
             console.print(table)
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
+
+    def list_true_without_none(self):
+        try:
+            docker_command = "docker images --format '{{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.CreatedSince}}\t{{.Size}}' | grep -v '<none>'"
+            containers = subprocess.run(
+                docker_command, shell=True, capture_output=True, text=True, check=True
+            )
+            console = Console()
+            table = Table(
+                show_header=True, header_style="bold magenta", show_lines=True
+            )
+            table.add_column("Repository", style="cyan")
+            table.add_column("Tag", style="yellow")
+            table.add_column("Container ID", style="bold green")
+            table.add_column("Created Since", style="green")
+            table.add_column("Size", style="red")
+            output_lines = containers.stdout.strip().split("\n")
+            for line in output_lines[1:]:
+                cols = line.split("\t")
+                if len(cols) >= 5:
+                    table.add_row(cols[0], cols[1], cols[2], cols[3], cols[4])
+            console.print(table)
+
+        except subprocess.CalledProcessError as e:
+            print(f"Error: {e}")
