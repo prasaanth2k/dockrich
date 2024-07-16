@@ -108,3 +108,25 @@ class DockrichHelper:
 
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
+    def list_networks(self):
+        try:
+            docker_commands = "docker network ls --format '{{.ID}}\t{{.Name}}\t{{.Driver}}\t{{.Scope}}'"
+            containers = subprocess.run(docker_commands, shell=True, capture_output=True, text=True, check=True)
+            console = Console()
+            table = Table(
+                show_header=True, header_style="bold magenta", show_lines=True
+            )
+            table.add_column("NETWORK ID", style="cyan")
+            table.add_column("NAME", style="yellow")
+            table.add_column("DRIVER", style="bold green")
+            table.add_column("SCOPE", style="green")
+            # print(type(containers.stdout))
+            output_lines = containers.stdout.strip().split('\n')
+            mainlines = output_lines
+            for i in range(len(mainlines)):
+                cols = mainlines[i].strip().split('\t')
+                table.add_row(cols[0],cols[1],cols[2],cols[3])
+            console.print(table)
+
+        except subprocess.CalledProcessError as e:
+            print(f"Error: {e}")
