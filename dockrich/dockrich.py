@@ -1,39 +1,43 @@
-import sys
+import argparse
 from lib.dockrich_helper import DockrichHelper
-
-dr = DockrichHelper()
-
-
-def has_args():
-    return str(sys.argv[1])
+from lib.dockmanager import Dockermanager
+from lib.dockcompose import load_json
 
 
-def display_help():
-    print("Usage: dockrich [OPTION]...")
-    print("With this you can able to pretty you docker outputs")
-    print("Mandatory arguments to long options are mandatory for short options too.\n")
-    print("  -h,  --help to print the help message")
-    print("  -rl, --running_containers to print all running containers with [Container ID] [Name] [Image] [State] [Networks] [Commands] [CreatedAt]")
-    print("  -ti, --list_true_images to list images without none tag and none name with [Repository] [Tag] [Container ID] [Created Since] [Size] ")
-    print("  -cp, --running_ports to list running container ports [Container ID] [Ports]")
-    print("  -nl, --list_networks to list all the networks [Network ID] [Name] [Driver] [Scope]")
 def main():
-    args_count = len(sys.argv)
-    if args_count <= 1:
-        display_help()
-    else:
-        if has_args() == "-h":
-            display_help()
-        elif has_args() == "-ti":
-            dr.list_true_without_none()
-        elif has_args() == "-cp":
-            dr.list_container_ports()
-        elif has_args() == "-rl":
-            dr.list_running_containers()
-        elif has_args() == "-nl":
-            dr.list_networks()
+    parser = argparse.ArgumentParser(description="With this you can able to pretty you docker outputs")
+    parser.add_argument("-rl","--running_containers",action="store_true",help="Print all running containers",)
+    parser.add_argument("-ti","--list_true_images",action="store_true",help="List images without none tag and none name",)
+    parser.add_argument("-cp","--running_ports",action="store_true",help="List running container ports",)
+    parser.add_argument("-nl", "--list_networks", action="store_true", help="List all the networks")
+    parser.add_argument("-sac","--stop_all_containers",action="store_true",help="Stop all running containers",)
+    parser.add_argument("-cf", "--composer_file", help="Input compose file")
+    parser.add_argument("-b", "--build", action="store_true", help="Build a Docker image")
+    parser.add_argument("--image_name", help="Name of the Docker image")
+    parser.add_argument("--tags", default="latest", help="Tags for the Docker image")
+    parser.add_argument("--path", help="Path to the Dockerfile directory")
+    args = parser.parse_args()
+
+    dr = DockrichHelper()
+    dm = Dockermanager()
+
+    if args.running_containers:
+        dr.list_running_containers()
+    elif args.list_true_images:
+        dr.list_true_without_none()
+    elif args.running_ports:
+        dr.list_container_ports()
+    elif args.list_networks:
+        dr.list_networks()
+    elif args.stop_all_containers:
+        dm.stop_all_running_containers()
+    elif args.build:
+        if not (args.image_name and args.path):
+            parser.error("--build requires --image_name and --path arguments.")
         else:
-            display_help()
+            dm.build(tags=args.tags, name=args.image_name, path=args.path)
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":

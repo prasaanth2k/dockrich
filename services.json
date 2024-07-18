@@ -1,0 +1,16 @@
+{
+    "services": {
+        "service1": {
+            "image": "redis",
+            "ports": [
+                "6379:6379"
+            ]
+        },
+        "service2": {
+            "image": "apache",
+            "ports": [
+                "8080:80"
+            ]
+        }
+    }
+}

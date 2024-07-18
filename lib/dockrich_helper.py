@@ -1,4 +1,3 @@
-# lib/dockrich_helper.py
 import subprocess
 from rich.console import Console
 from rich.table import Table
@@ -100,10 +99,10 @@ class DockrichHelper:
             table.add_column("Created Since", style="green")
             table.add_column("Size", style="red")
             output_lines = containers.stdout.strip().split("\n")
-            for line in output_lines[1:]:
-                cols = line.split("\t")
-                if len(cols) >= 5:
-                    table.add_row(cols[0], cols[1], cols[2], cols[3], cols[4])
+            mainlines = output_lines
+            for i in range(len(mainlines)):
+                cols = mainlines[i].strip().split('\t')
+                table.add_row(cols[0],cols[1],cols[2],cols[3],cols[4])
             console.print(table)
 
         except subprocess.CalledProcessError as e:
