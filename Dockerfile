@@ -1,3 +1,3 @@
-FROM ubuntu:22.04
-EXPOSE 80
+FROM python:latest
+
 CMD [ "tail","-f","/dev/null" ]

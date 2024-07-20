@@ -1,43 +1,33 @@
-import argparse
-from lib.dockrich_helper import DockrichHelper
-from lib.dockmanager import Dockermanager
+from lib.dockmanager import print_options, Dockermanager, hasargs
 from lib.dockcompose import load_json
+from lib.dockrich_helper import DockrichHelper
+
+DM = Dockermanager()
 
 
 def main():
-    parser = argparse.ArgumentParser(description="With this you can able to pretty you docker outputs")
-    parser.add_argument("-rl","--running_containers",action="store_true",help="Print all running containers",)
-    parser.add_argument("-ti","--list_true_images",action="store_true",help="List images without none tag and none name",)
-    parser.add_argument("-cp","--running_ports",action="store_true",help="List running container ports",)
-    parser.add_argument("-nl", "--list_networks", action="store_true", help="List all the networks")
-    parser.add_argument("-sac","--stop_all_containers",action="store_true",help="Stop all running containers",)
-    parser.add_argument("-cf", "--composer_file", help="Input compose file")
-    parser.add_argument("-b", "--build", action="store_true", help="Build a Docker image")
-    parser.add_argument("--image_name", help="Name of the Docker image")
-    parser.add_argument("--tags", default="latest", help="Tags for the Docker image")
-    parser.add_argument("--path", help="Path to the Dockerfile directory")
-    args = parser.parse_args()
+    arg = hasargs()
 
-    dr = DockrichHelper()
-    dm = Dockermanager()
+    commands = {
+        "-h": print_options,
+        "--help": print_options,
+        "-r": DM.list_running_containers,
+        "--running": DM.list_running_containers,
+        "-i": DM.list_true_without_none,
+        "--images": DM.list_true_without_none,
+        "-p": DM.list_container_ports,
+        "--ports": DM.list_container_ports,
+        "-n": DM.list_networks,
+        "--networks": DM.list_networks,
+        "-s": DM.stop_all_running_containers,
+        "--stop": DM.stop_all_running_containers,
+    }
 
-    if args.running_containers:
-        dr.list_running_containers()
-    elif args.list_true_images:
-        dr.list_true_without_none()
-    elif args.running_ports:
-        dr.list_container_ports()
-    elif args.list_networks:
-        dr.list_networks()
-    elif args.stop_all_containers:
-        dm.stop_all_running_containers()
-    elif args.build:
-        if not (args.image_name and args.path):
-            parser.error("--build requires --image_name and --path arguments.")
-        else:
-            dm.build(tags=args.tags, name=args.image_name, path=args.path)
+    # Call the function if the argument is found in the dictionary
+    if arg in commands:
+        commands[arg]()
     else:
-        parser.print_help()
+        print("Unknown command")
 
 
 if __name__ == "__main__":
