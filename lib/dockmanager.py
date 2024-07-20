@@ -9,11 +9,25 @@ from rich import print
 import secrets
 import docker
 
+
 def hasargs():
     if len(sys.argv) == 2:
         return str(sys.argv[1])
     else:
         print_options()
+
+
+def stop_containers(container_id_or_name: str):
+    client = docker.from_env()
+    try:
+        container = client.containers.get(container_id_or_name)
+        container.stop()
+        console = Console()
+        console.log(f"Container stopped : {container_id_or_name}")
+    except docker.errors.NotFound:
+        print(f"[bold red]{container_id_or_name} not found")
+    except docker.errors.APIError as e:
+        print(f"Error while stopping container {container_id_or_name}:{e}")
 
 
 def print_options():
@@ -58,21 +72,10 @@ class Dockermanager:
             print(f"[bold red] {e.stderr} [/bold red]")
 
     def stop_all_running_containers(self):
-        try:
-            print("[bold green] Started Stoping process ... [/bold green]")
-            dockercommand = "docker stop $(docker ps -a -q)"
-            result = subprocess.run(
-                dockercommand, shell=True, capture_output=True, text=True, check=True
-            )
-            container_ids = result.stdout.splitlines()
-            for i in container_ids:
-                print(
-                    f"[green bold]*[/green bold] [purple]{i} Container Stopped 📦 [/purple]"
-                )
-                sleep(2)
-        except subprocess.CalledProcessError as e:
-            if e.returncode == 1:
-                print(f"[bold red] {e} [/bold red]")
+        client = docker.from_env()
+        containers = client.containers.list()
+        for container in containers:
+            stop_containers(container.id)
 
     def run_container(self, imagename, imagetag):
         try:
