@@ -57,10 +57,8 @@ imagenames = secrets.token_urlsafe(8)
 
 
 class Dockermanager:
-    def __init__(self):
-        pass
-
-    def build(self, tags="latest", name="imagenames", path="."):
+    @staticmethod
+    def build(tags="latest", name="imagenames", path="."):
         try:
             dockercommand = f"docker build -t {name}:{tags} {path}"
             result = subprocess.run(
@@ -70,14 +68,14 @@ class Dockermanager:
             print(result.stderr)
         except subprocess.CalledProcessError as e:
             print(f"[bold red] {e.stderr} [/bold red]")
-
-    def stop_all_running_containers(self):
+    @staticmethod
+    def stop_all_running_containers():
         client = docker.from_env()
         containers = client.containers.list()
         for container in containers:
             stop_containers(container.id)
-
-    def run_container(self, imagename, imagetag):
+    @staticmethod
+    def run_container(imagename, imagetag):
         try:
             dockercommand = f"docker run -d {imagename}:{imagetag}"
             print(dockercommand)
@@ -88,8 +86,8 @@ class Dockermanager:
         except subprocess.CalledProcessError as e:
             if e.returncode == 1:
                 print(f"[bold red] {e} [/bold red]")
-
-    def exec(self, containerid):
+    @staticmethod
+    def exec(containerid):
         try:
             dockercommand = f"docker exec -it {containerid} bash"
             result = subprocess.run(
@@ -98,8 +96,8 @@ class Dockermanager:
         except subprocess.CalledProcessError as e:
             if e.returncode == 1:
                 print(f"[bold red] {e} [/bold red]")
-
-    def list_running_containers(self):
+    @staticmethod
+    def list_running_containers():
         try:
             # Run the Docker command to list running containers with networks and command
             out = subprocess.run(
@@ -145,8 +143,8 @@ class Dockermanager:
 
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
-
-    def list_container_ports(self):
+    @staticmethod
+    def list_container_ports():
         try:
             containers = subprocess.run(
                 ["docker", "ps", "--format", "{{.ID}}"],
@@ -173,8 +171,8 @@ class Dockermanager:
             console.print(table)
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
-
-    def list_true_without_none(self):
+    @staticmethod
+    def list_true_without_none():
         try:
             docker_command = "docker images --format '{{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.CreatedSince}}\t{{.Size}}' | grep -v '<none>'"
             containers = subprocess.run(
@@ -198,8 +196,8 @@ class Dockermanager:
 
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
-
-    def list_networks(self):
+    @staticmethod
+    def list_networks():
         try:
             docker_commands = "docker network ls --format '{{.ID}}\t{{.Name}}\t{{.Driver}}\t{{.Scope}}'"
             containers = subprocess.run(

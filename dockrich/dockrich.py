@@ -1,6 +1,5 @@
-from lib.dockmanager import print_options, Dockermanager, hasargs
-from lib.dockcompose import load_json
-from lib.dockrich_helper import DockrichHelper
+from dockrich.dockmanager import print_options , Dockermanager,hasargs
+from dockrich.dockcompose import load_json
 
 DM = Dockermanager()
 

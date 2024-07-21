@@ -1,0 +1,4 @@
+docker_py==1.10.6
+rich==13.7.1
+setuptools==68.2.2
+setuptools==59.6.0
