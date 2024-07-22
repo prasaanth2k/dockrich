@@ -6,6 +6,7 @@ import shlex
 from rich.panel import Panel
 from time import sleep
 from rich import print
+from rich import spinner
 import secrets
 import docker
 
@@ -20,14 +21,17 @@ def hasargs():
 def stop_containers(container_id_or_name: str):
     client = docker.from_env()
     try:
-        container = client.containers.get(container_id_or_name)
-        container.stop()
         console = Console()
-        console.log(f"Container stopped : {container_id_or_name}")
+        container = client.containers.get(container_id_or_name)
+        with console.status("[bold green]Stopping Docker container...", spinner="bouncingBar"):
+            container.stop()
+        console.log(f"[bold green]Container stopped: {container_id_or_name}")
     except docker.errors.NotFound:
         print(f"[bold red]{container_id_or_name} not found")
     except docker.errors.APIError as e:
         print(f"Error while stopping container {container_id_or_name}:{e}")
+    except KeyboardInterrupt:
+        print("[bold red] Quitting [/bold red]")
 
 
 def print_options():
