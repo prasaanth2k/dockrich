@@ -6,28 +6,39 @@ import shlex
 from rich.panel import Panel
 from time import sleep
 from rich import print
+from rich import spinner
 import secrets
 import docker
 
 
 def hasargs():
-    if len(sys.argv) == 2:
-        return str(sys.argv[1])
-    else:
-        print_options()
+    args = sys.argv[1:]
+    args_dict = {}
+    i = 0
+    while i < len(args):
+        if i + 1 < len(args) and not args[i + 1].startswith('-'):
+            args_dict[args[i]] = args[i + 1]
+            i += 2
+        else:
+            args_dict[args[i]] = None
+            i += 1
+    return args_dict
 
 
 def stop_containers(container_id_or_name: str):
     client = docker.from_env()
     try:
-        container = client.containers.get(container_id_or_name)
-        container.stop()
         console = Console()
-        console.log(f"Container stopped : {container_id_or_name}")
+        container = client.containers.get(container_id_or_name)
+        with console.status("[bold green]Stopping Docker containers...", spinner="bouncingBar"):
+            container.stop()
+        console.log(f"[bold white]Container stopped: [bold white]{container_id_or_name}")
     except docker.errors.NotFound:
         print(f"[bold red]{container_id_or_name} not found")
     except docker.errors.APIError as e:
         print(f"Error while stopping container {container_id_or_name}:{e}")
+    except KeyboardInterrupt:
+        print("[bold red] Quitting [/bold red]")
 
 
 def print_options():
@@ -45,6 +56,7 @@ def print_options():
     table.add_row("-p, --ports", "List all running docker container ports")
     table.add_row("-n, --networks", "List all docker networks")
     table.add_row("-s, --stop", "Stop all running containers")
+    table.add_row("-rn, --running","to run an container with image dockrich -rn -image name -t name -c command")
 
     panel = Panel(
         table, title="[Options]", title_align="left", border_style="bold white"
@@ -72,20 +84,22 @@ class Dockermanager:
     def stop_all_running_containers():
         client = docker.from_env()
         containers = client.containers.list()
-        for container in containers:
-            stop_containers(container.id)
+        if len(containers) == 0:
+            print("[bold white] [*] No running container to stop [/bold white]")
+        else:
+            for container in containers:
+                stop_containers(container.id)
     @staticmethod
-    def run_container(imagename, imagetag):
+    def run_container(imagename, imagetag="latest",command="tail -f /dev/null"):
         try:
-            dockercommand = f"docker run -d {imagename}:{imagetag}"
-            print(dockercommand)
-            result = subprocess.run(
-                dockercommand, shell=True, capture_output=True, text=True, check=True
-            )
-            print(f"[green bold] Started Container {result.stdout} [/green bold]")
+            dockercommand = f"docker run -d {imagename}:{imagetag} {command}"
+            console = Console()
+            with console.status("[bold green] Starting Docker container...", spinner="bouncingBar"):
+                result = subprocess.run(dockercommand,shell=True,capture_output=True,text=True,check=True)
+            containerid = result.stdout
+            print(f"[bold white] [*] Started :  {containerid}[/bold white] ")
         except subprocess.CalledProcessError as e:
-            if e.returncode == 1:
-                print(f"[bold red] {e} [/bold red]")
+            print(e)
     @staticmethod
     def exec(containerid):
         try:
@@ -221,3 +235,4 @@ class Dockermanager:
 
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
+ 
