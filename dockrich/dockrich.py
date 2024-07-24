@@ -33,6 +33,9 @@ def main():
                     usertagname = values[1]
                     command = values[2]
                     DM.run_container(imagename=userimagename,imagetag=usertagname,command=command)
+                elif key in {"-st"}:
+                    containername = values[0]
+                    DM.start_container(containername=containername)
     except IndexError:
         print_options()
 if __name__ == "__main__":
