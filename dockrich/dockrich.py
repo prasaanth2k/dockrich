@@ -22,6 +22,8 @@ def main():
                     DM.list_networks()
                 elif key in {'-s','--stop'}:
                     DM.stop_all_running_containers()
+                elif key in {'-a','--all'}:
+                    DM.list_all_container()
                 else:
                     print_options()
         elif values[0] is not None:

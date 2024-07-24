@@ -57,7 +57,7 @@ def print_options():
     table.add_row("-n, --networks", "List all docker networks")
     table.add_row("-s, --stop", "Stop all running containers")
     table.add_row("-rn, --running","to run an container with image dockrich -rn -image name -t name -c command")
-
+    table.add_row("-a, --all","to list all containers including stopped containers")
     panel = Panel(
         table, title="[Options]", title_align="left", border_style="bold white"
     )
@@ -235,4 +235,25 @@ class Dockermanager:
 
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
- 
+    @staticmethod
+    def list_all_container():
+        try:
+            dockercommand = "docker container ls -a --format '{{.ID}} {{.Image}} {{.Names}} {{.Command}} {{.State}}'"
+            containers = subprocess.run(dockercommand,shell=True,capture_output=True,text=True,check=True)
+            console = Console()
+            table = Table(
+                show_header=True, header_style="bold magenta", show_lines=True
+            )
+            table.add_column("NETWORK ID", style="cyan")
+            table.add_column("Image", style="bold green")
+            table.add_column("Name", style="bold green")
+            table.add_column("Command", style="bold green")
+            table.add_column("State",style="bold green")
+            for line in containers.stdout.splitlines():
+                parts = shlex.split(line)
+                container_id, image, name, command, state = parts[0], parts[1], parts[2], parts[3], " ".join(parts[4:])
+                table.add_row(container_id, image, name, command, state)
+
+            console.print(table)
+        except subprocess.CalledProcessError as e:
+            print(f"Error: {e}")
