@@ -86,12 +86,12 @@ class Response:
 
 
 class Dockerinspector:
-    def __init__(self, containerid: str):
-        self.containerid = containerid
+    def __init__(self, containerid_or_name: str):
+        self.containerid_or_name = containerid_or_name
 
     def getvalues(self) -> Response:
         docker_command = [
-            "docker", "inspect", "--size", "--format", '{{json .}}', self.containerid
+            "docker", "inspect", "--size", "--format", '{{json .}}', self.containerid_or_name
         ]
         try:
             output = subprocess.run(

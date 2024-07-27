@@ -1,17 +1,16 @@
-# from dockrich.dockmanager import Dockermanager
-
-# DM = Dockermanager()
-
-# DM.list_container_ports()
-# DM.list_networks()
-# DM.list_true_without_none()
-# DM.run_container(imagename="kalilinux/kali-rolling",imagetag="latest",command="tail -f /dev/null")
-# DM.start_container(containername="minio")
-# DM.list_all_container()
-
 from dockrich.dockerinspector import Dockerinspector
+from dockrich.dockerhistory import Dockerhistory
+from dockrich.dockerstats import Dockerstats
 
-m = Dockerinspector(containerid="40465720184c")
+inspect = Dockerinspector(containerid_or_name="debian_container")
+images = Dockerhistory(image_name="prasaanthdjango")
+status = Dockerstats(containerid_or_name="debian_container")
 
-instance  = m.getvalues()
-print(instance.Name)
+values = inspect.getvalues()
+print(values.Id)
+
+for image in images.getvalues():
+    print(image.Size)
+
+s = status.getstats()
+print(s.BlockIO)
