@@ -1,4 +1,4 @@
-from dockrich.dockmanager import print_options , Dockermanager,hasargs
+from dockrich.dockerclimanager import print_options , Dockermanager,hasargs
 from dockrich.dockcompose import load_json
 
 DM = Dockermanager()

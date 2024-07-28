@@ -13,14 +13,28 @@ pip install dockrich
 ```
 
 ```python3
+from dockrich.dockerinspector import Dockerinspector
+from dockrich.dockerhistory import Dockerhistory
+from dockrich.dockerstats import Dockerstats
+from dockrich.dockermanage import Dockermanage
 
-from dockrich.dockmanager import Dockermanager
+inspect = Dockerinspector(containerid_or_name="debian_container")
+images = Dockerhistory(image_name="prasaanthdjango")
+status = Dockerstats(containerid_or_name="debian_container")
 
-DM = Dockermanager()
+values = inspect.getvalues()
+print(values.Id)
 
-DM.list_container_ports()
-DM.list_networks()
-DM.list_true_without_none()
-DM.run_container(imagename="kalilinux/kali-rolling",imagetag="latest",command="tail -f /dev/null")
+for image in images.getvalues():
+    print(image.Size)
+
+s = status.getstats()
+print(s.BlockIO)
+
+ps = Dockermanage(containerid_or_name="debian_container")
+
+output = ps.ps()
+print(output.LocalVolumes)
+
 
 ```
