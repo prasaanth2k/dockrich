@@ -10,13 +10,14 @@ from rich import spinner
 import secrets
 import docker
 
+console = Console()
 
 def hasargs():
     args = sys.argv[1:]
     args_dict = {}
     i = 0
     while i < len(args):
-        if i + 1 < len(args) and not args[i + 1].startswith('-'):
+        if i + 1 < len(args) and not args[i + 1].startswith("-"):
             args_dict[args[i]] = args[i + 1]
             i += 2
         else:
@@ -30,9 +31,13 @@ def stop_containers(container_id_or_name: str):
     try:
         console = Console()
         container = client.containers.get(container_id_or_name)
-        with console.status("[bold green]Stopping Docker containers...", spinner="bouncingBar"):
+        with console.status(
+            "[bold green]Stopping Docker containers...", spinner="bouncingBar"
+        ):
             container.stop()
-        console.log(f"[bold white]Container stopped: [bold white]{container_id_or_name}")
+        console.log(
+            f"[bold white]Container stopped: [bold white]{container_id_or_name}"
+        )
     except docker.errors.NotFound:
         print(f"[bold red]{container_id_or_name} not found")
     except docker.errors.APIError as e:
@@ -56,8 +61,11 @@ def print_options():
     table.add_row("-p, --ports", "List all running docker container ports")
     table.add_row("-n, --networks", "List all docker networks")
     table.add_row("-s, --stop", "Stop all running containers")
-    table.add_row("-rn, --running","to run an container with image dockrich -rn -image name -t name -c command")
-
+    table.add_row(
+        "-rn, --running",
+        "to run an container with image dockrich -rn -image name -t name -c command",
+    )
+    table.add_row("-a, --all", "to list all containers including stopped containers")
     panel = Panel(
         table, title="[Options]", title_align="left", border_style="bold white"
     )
@@ -80,6 +88,7 @@ class Dockermanager:
             print(result.stderr)
         except subprocess.CalledProcessError as e:
             print(f"[bold red] {e.stderr} [/bold red]")
+
     @staticmethod
     def stop_all_running_containers():
         client = docker.from_env()
@@ -89,17 +98,27 @@ class Dockermanager:
         else:
             for container in containers:
                 stop_containers(container.id)
+
     @staticmethod
-    def run_container(imagename, imagetag="latest",command="tail -f /dev/null"):
+    def run_container(imagename, imagetag="latest", command="tail -f /dev/null"):
         try:
             dockercommand = f"docker run -d {imagename}:{imagetag} {command}"
             console = Console()
-            with console.status("[bold green] Starting Docker container...", spinner="bouncingBar"):
-                result = subprocess.run(dockercommand,shell=True,capture_output=True,text=True,check=True)
+            with console.status(
+                "[bold green] Starting Docker container...", spinner="bouncingBar"
+            ):
+                result = subprocess.run(
+                    dockercommand,
+                    shell=True,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
             containerid = result.stdout
             print(f"[bold white] [*] Started :  {containerid}[/bold white] ")
         except subprocess.CalledProcessError as e:
             print(e)
+
     @staticmethod
     def exec(containerid):
         try:
@@ -110,6 +129,7 @@ class Dockermanager:
         except subprocess.CalledProcessError as e:
             if e.returncode == 1:
                 print(f"[bold red] {e} [/bold red]")
+
     @staticmethod
     def list_running_containers():
         try:
@@ -157,6 +177,7 @@ class Dockermanager:
 
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
+
     @staticmethod
     def list_container_ports():
         try:
@@ -185,6 +206,7 @@ class Dockermanager:
             console.print(table)
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
+
     @staticmethod
     def list_true_without_none():
         try:
@@ -210,6 +232,7 @@ class Dockermanager:
 
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
+
     @staticmethod
     def list_networks():
         try:
@@ -235,4 +258,51 @@ class Dockermanager:
 
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
- 
+
+    @staticmethod
+    def list_all_container():
+        try:
+            dockercommand = "docker container ls -a --format '{{.ID}} {{.Image}} {{.Names}} {{.Command}} {{.State}}'"
+            containers = subprocess.run(
+                dockercommand, shell=True, capture_output=True, text=True, check=True
+            )
+            console = Console()
+            table = Table(
+                show_header=True, header_style="bold magenta", show_lines=True
+            )
+            table.add_column("NETWORK ID", style="cyan")
+            table.add_column("Image", style="bold green")
+            table.add_column("Name", style="bold green")
+            table.add_column("Command", style="bold green")
+            table.add_column("State", style="bold green")
+            for line in containers.stdout.splitlines():
+                parts = shlex.split(line)
+                container_id, image, name, command, state = (
+                    parts[0],
+                    parts[1],
+                    parts[2],
+                    parts[3],
+                    " ".join(parts[4:]),
+                )
+                table.add_row(container_id, image, name, command, state)
+
+            console.print(table)
+        except subprocess.CalledProcessError as e:
+            print(f"Error: {e}")
+
+    @staticmethod
+    def start_container(containername):
+        try:
+            dockercommand = f"docker start {containername}"
+            result = subprocess.run(
+                dockercommand, shell=True, capture_output=True, text=True, check=True
+            )
+            if result.returncode == 0:
+                with console.status(
+                    "[bold green]Starting Docker containers...", spinner="bouncingBar"
+                ):  
+                    console.log(f"[bold green] Started {containername} container")
+            else:
+                print(f"[red bold]{result.stderr}[red bold]")
+        except subprocess.CalledProcessError as e:
+            print(f"[red bold]{e}[red bold]")

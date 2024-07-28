@@ -1,4 +1,4 @@
-from dockrich.dockmanager import print_options , Dockermanager,hasargs
+from dockrich.dockerclimanager import print_options , Dockermanager,hasargs
 from dockrich.dockcompose import load_json
 
 DM = Dockermanager()
@@ -22,6 +22,8 @@ def main():
                     DM.list_networks()
                 elif key in {'-s','--stop'}:
                     DM.stop_all_running_containers()
+                elif key in {'-a','--all'}:
+                    DM.list_all_container()
                 else:
                     print_options()
         elif values[0] is not None:
@@ -31,6 +33,9 @@ def main():
                     usertagname = values[1]
                     command = values[2]
                     DM.run_container(imagename=userimagename,imagetag=usertagname,command=command)
+                elif key in {"-st"}:
+                    containername = values[0]
+                    DM.start_container(containername=containername)
     except IndexError:
         print_options()
 if __name__ == "__main__":

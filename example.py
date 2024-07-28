@@ -1,8 +1,22 @@
-from dockrich.dockmanager import Dockermanager
+from dockrich.dockerinspector import Dockerinspector
+from dockrich.dockerhistory import Dockerhistory
+from dockrich.dockerstats import Dockerstats
+from dockrich.dockermanage import Dockermanage
 
-DM = Dockermanager()
+inspect = Dockerinspector(containerid_or_name="hopeful_wing")
+images = Dockerhistory(image_name="prasaanthdjango")
+status = Dockerstats(containerid_or_name="debian_container")
 
-DM.list_container_ports()
-DM.list_networks()
-DM.list_true_without_none()
-DM.run_container(imagename="kalilinux/kali-rolling",imagetag="latest",command="tail -f /dev/null")
+values = inspect.getvalues()
+print(values.HostConfig['IpcMode'])
+
+for image in images.getvalues():
+    print(image.Size)
+
+s = status.getstats()
+print(s.BlockIO)
+
+ps = Dockermanage(containerid_or_name="debian_container")
+
+output = ps.ps()
+print(output.LocalVolumes)
