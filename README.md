@@ -12,6 +12,52 @@ A tool to pretty print Docker command outputs.
 pip install dockrich
 ```
 
+## CLI Mode 
+
+```bash
+$ dockrich -h
+```
+
+![helpimg](/images/helpmessage.png)
+
+```bash
+$ dockrich -r
+```
+![runningcontainers](/images/runncontainers.png)
+
+```bash
+$ dockrich -i 
+```
+![dockerimages](/images/images.png)
+
+```bash
+$ dockrich -p
+```
+![dockerports](/images/ports.png)
+
+
+```bash
+
+$ dockrich -n
+
+```
+![dockernetworks](/images/images.png)
+
+```bash
+
+$ dockrich -s 
+```
+![dockerstop](/images/stopcontainers.png)
+
+```bash
+
+$ dockrich -a 
+
+```
+![dockerich](/images/allcontainers.png)
+
+
+## Api Mode 
 ```python3
 from dockrich.dockerinspector import Dockerinspector
 from dockrich.dockerhistory import Dockerhistory
