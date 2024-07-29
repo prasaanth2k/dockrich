@@ -306,3 +306,4 @@ class Dockermanager:
                 print(f"[red bold]{result.stderr}[red bold]")
         except subprocess.CalledProcessError as e:
             print(f"[red bold]{e}[red bold]")
+    

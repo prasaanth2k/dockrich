@@ -1,6 +1,5 @@
 import subprocess
 import json
-import re
 
 class Response:
     def __init__(self, data: dict):
@@ -18,6 +17,7 @@ class Response:
         self.Size = data.get("Size")
         self.State = data.get("State")
         self.Status = data.get("Status")
+        self.RestartContainerId = data.get("restart_container_id")
 
     def __repr__(self) -> str:
         return f"<Response {self.__dict__}>"
@@ -29,13 +29,27 @@ class Dockermanage:
 
     def ps(self) -> Response:
         docker_command = [
-            "docker", "ps","--format",'{{json .}}',"--filter", f"name={self.containerid_or_name}" 
+            "docker", "ps", "--format", '{{json .}}', "--filter", f"name={self.containerid_or_name}"
         ]
         try:
             output = subprocess.run(
                 docker_command, capture_output=True, check=True, text=True
             )
             value = json.loads(output.stdout)  # The output is already in JSON format
+            return Response(value)
+        except subprocess.CalledProcessError as e:
+            raise Exception(f"Error: {e.stderr.strip()}")
+
+    def restart(self) -> Response:
+        docker_command = ["docker", "restart", f"{self.containerid_or_name}"]
+        try:
+            output = subprocess.run(docker_command, check=True, text=True, capture_output=True)
+            value = {
+                "restart_container_id": output.stdout.strip(),
+                "Command": None, "CreatedAt": None, "ID": None, "Image": None, "Labels": None,
+                "LocalVolumes": None, "Mounts": None, "Names": None, "Networks": None,
+                "Ports": None, "RunningFor": None, "Size": None, "State": None, "Status": None
+            }
             return Response(value)
         except subprocess.CalledProcessError as e:
             raise Exception(f"Error: {e.stderr.strip()}")
