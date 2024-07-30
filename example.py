@@ -18,7 +18,7 @@ from dockrich.dockermanage import Dockermanage
 
 ps = Dockermanage(containerid_or_name="debian_container")
 
-output = ps.ps()
-print(output.Id)
-output2 = ps.restart()
-print(output2.RestartContainerId)
+# output = ps.ps()
+# print(output.Id)
+# output2 = ps.restart()
+# print(output2.RestartContainerId)
