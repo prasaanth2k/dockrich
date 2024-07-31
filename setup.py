@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="dockrich",
+    name="monisys",
     version="0.5",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
-            "dockrich = dockrich.dockrich:main",
+            "dockrich = monisys.monisys:main",
         ],
     },
     install_requires=[
