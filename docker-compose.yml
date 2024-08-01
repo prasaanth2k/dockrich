@@ -1,0 +1,24 @@
+services:
+  kali:
+    image: kalilinux/kali-rolling
+    container_name: kali_container
+    tty: true
+
+  ubuntu:
+    image: ubuntu:latest
+    container_name: ubuntu_container
+    tty: true
+
+  fedora:
+    image: fedora:latest
+    container_name: fedora_container
+    tty: true
+
+  debian:
+    image: debian:latest
+    container_name: debian_container
+    tty: true
+
+networks:
+  default:
+    driver: bridge

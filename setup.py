@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name="monisys",
-    version="0.5",
+    version="0.1",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
-            "dockrich = monisys.monisys:main",
+            "monisys = monisys.monicli:main",
         ],
     },
     install_requires=[
@@ -15,10 +15,10 @@ setup(
     python_requires=">=3.6",
     author="Prasaanth Sakthivel",
     author_email="prasaanth@gmail.com",
-    description="A tool to pretty print Docker command outputs",
+    description="Monisys with tool we can able to moniter entire os",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/dockrich",
+    url="https://github.com/prasaanth2k/monisys",
     license="MIT",
     classifiers=[
         "License :: OSI Approved :: MIT License",

@@ -1,6 +1,6 @@
 import sys
 from Arguments import Arguments
-from Dockermanage import Dockermanage
+from Managers.manager import Managers
 import rich
 from rich.console import Console
 from rich.table import Table
@@ -29,5 +29,5 @@ class Monisys:
 
 if __name__ == "__main__":
     args = Arguments(sys.argv[1:])
-    Dock = Dockermanage(args)
+    Dock = Managers(args)
     test = Monisys(args)
