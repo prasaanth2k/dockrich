@@ -1,7 +1,6 @@
 import subprocess
 import json
 
-
 class Response:
     def __init__(self, data: dict):
         self.cgroup_namespace = data.get("cgroup_namespace")

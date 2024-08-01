@@ -1,5 +1,6 @@
-from Arguments import Arguments
-from Managers.Dockermanage import Dockermanage
+from monisys.Managers.Arguments import Arguments
+from monisys.Managers.dockermanager import Dockermanage
+from .dockermanager import Dockermanage
 
 Dock = Dockermanage()
 

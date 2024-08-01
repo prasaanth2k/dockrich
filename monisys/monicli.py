@@ -1,17 +1,19 @@
 import sys
-from Arguments import Arguments
-from Managers.manager import Managers
-import rich
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from monisys.Managers.Arguments import Arguments
+from monisys.Managers.manager import Managers
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
-
 
 class Monisys:
     def __init__(self, args: Arguments):
         self.args = args
         if self.args.hasOptions(["--help"]):
             self.helpmessage()
+
     def helpmessage(self):
         console = Console()
         table = Table(show_header=False, box=None)
@@ -26,8 +28,10 @@ class Monisys:
         )
         console.print(panel)
 
-
-if __name__ == "__main__":
+def main():
     args = Arguments(sys.argv[1:])
     Dock = Managers(args)
     test = Monisys(args)
+
+if __name__ == "__main__":
+    main()
