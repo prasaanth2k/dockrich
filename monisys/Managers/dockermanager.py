@@ -1,7 +1,8 @@
 import subprocess
 import json
+from typing import List
 
-class Response:
+class ContainerResponse:
     def __init__(self, data: dict):
         self.cgroup_namespace = data.get("cgroup_namespace")
         self.command = data.get("command")
@@ -29,16 +30,37 @@ class Response:
         self.uts_namespace = data.get("uts_namespace")
 
     def __repr__(self) -> str:  
-        return f"<Response>{self.__dict__}"
+        return f"<ContainerResponse {self.__dict__}>"
 
+class ImageResponse:
+    def __init__(self, data: dict):
+        self.id = data.get("id")
+        self.created = data.get("created")
+        self.size_bytes = data.get("size_bytes")
+        self.tags = data.get("tags")
+    
+    def __repr__(self) -> str:
+        return f"<ImageResponse {self.__dict__}>"
 
 class Dockermanage:
+    def ps(self) -> List[ContainerResponse]:
+        try:
+            docker_containers = ["osqueryi", "--json", "SELECT * FROM docker_containers;"]
+            output = subprocess.run(docker_containers, capture_output=True, check=True, text=True)
+            result = json.loads(output.stdout)
+            responses = [ContainerResponse(container) for container in result]
+            return responses
+        except subprocess.CalledProcessError as e:
+            print(f"Error running command {e.cmd}: {e.output}")
+            return []
 
-    def ps(self) -> list[Response]:
-        docker_containers = "osqueryi --json 'SELECT * FROM docker_containers;'"
-        output = subprocess.run(
-            docker_containers, shell=True, capture_output=True, check=True
-        )
-        result = json.loads(output.stdout)
-        responses = [Response(container) for container in result]
-        return responses
+    def images(self) -> List[ImageResponse]:
+        try:
+            docker_images = ["osqueryi", "--json", "SELECT * FROM docker_images;"]
+            output = subprocess.run(docker_images, capture_output=True, check=True, text=True)
+            result = json.loads(output.stdout)
+            responses = [ImageResponse(image) for image in result]
+            return responses
+        except subprocess.CalledProcessError as e:
+            print(f"Error running command {e.cmd}: {e.output}")
+            return []
