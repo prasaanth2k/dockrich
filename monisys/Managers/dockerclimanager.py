@@ -21,3 +21,11 @@ class Dockermanagecli:
             return result
         except subprocess.CalledProcessError as e:
             print(e.cmd)
+    def docker_volumes(self):
+        try:
+            docker_volumes = ["osqueryi","--json","SELECT * FROM docker_volumes;"]
+            output = subprocess.run(docker_volumes,capture_output=True,check=True,text=True)
+            result = json.loads(output.stdout)
+            return result
+        except subprocess.CalledProcessError as e:
+            print(e.cmd)

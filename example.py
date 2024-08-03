@@ -2,6 +2,14 @@ from monisys.Managers.dockermanager import Dockermanage
 
 docker = Dockermanage()
 
-vaule = docker.images()
-for d in vaule:
-    print(d.id)
+ps = docker.ps()
+for i in ps:
+    print(i.id)
+
+images = docker.images()
+for i in images:
+    print(i.created)
+
+volumes = docker.volumes()
+for i in volumes:
+    print(i.driver)

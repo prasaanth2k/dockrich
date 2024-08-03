@@ -41,7 +41,12 @@ class ImageResponse:
     
     def __repr__(self) -> str:
         return f"<ImageResponse {self.__dict__}>"
-
+class VolumeResponse:
+    def __init__(self,data:dict):
+        self.driver = data.get("driver")
+        self.mount_point = data.get("mount_point")
+        self.name = data.get("name")
+        self.type = data.get("type")
 class Dockermanage:
     def ps(self) -> List[ContainerResponse]:
         try:
@@ -60,6 +65,17 @@ class Dockermanage:
             output = subprocess.run(docker_images, capture_output=True, check=True, text=True)
             result = json.loads(output.stdout)
             responses = [ImageResponse(image) for image in result]
+            return responses
+        except subprocess.CalledProcessError as e:
+            print(f"Error running command {e.cmd}: {e.output}")
+            return []
+        
+    def volumes(self) -> List[VolumeResponse]:
+        try:
+            docker_volumes = ["osqueryi","--json","SELECT * FROM docker_volumes;"]
+            output = subprocess.run(docker_volumes,capture_output=True,check=True,text=True)
+            result = json.loads(output.stdout)
+            responses = [VolumeResponse(volume) for volume in result]
             return responses
         except subprocess.CalledProcessError as e:
             print(f"Error running command {e.cmd}: {e.output}")

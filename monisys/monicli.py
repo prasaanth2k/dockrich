@@ -11,7 +11,7 @@ from rich.panel import Panel
 class Monisys:
     def __init__(self, args: Arguments):
         self.args = args
-        if self.args.hasOptions(["--help"]):
+        if self.args.hasOptions(["--help"]) or self.args.hasOptions(["-h"]):
             self.helpmessage()
 
     def helpmessage(self):
@@ -23,6 +23,7 @@ class Monisys:
         table.add_row(" ", "Monisys", style="purple")
         table.add_row(" ", " ")
         table.add_row("-h, --help", "Show this help message and exit")
+        table.add_row("--ps","Show all running containers")
         panel = Panel(
             table, title="[Options]", title_align="left", border_style="bold white"
         )
