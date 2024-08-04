@@ -47,6 +47,19 @@ class VolumeResponse:
         self.mount_point = data.get("mount_point")
         self.name = data.get("name")
         self.type = data.get("type")
+class LayersResponse:
+    def __init__(self,data:dict):
+        self.id = data.get("id")
+        self.layer_id = data.get("layer_id")
+        self.layer_order = data.get("layer_order")
+class ImagehistoryResponse:
+    def __init__(self,data:dict):
+        self.comment = data.get("comment")
+        self.created = data.get("created")
+        self.created_by = data.get("created_by")
+        self.id = data.get("id")
+        self.size = data.get("size")
+        self.tags = data.get("tags")
 class Dockermanage:
     def ps(self) -> List[ContainerResponse]:
         try:
@@ -80,3 +93,21 @@ class Dockermanage:
         except subprocess.CalledProcessError as e:
             print(f"Error running command {e.cmd}: {e.output}")
             return []
+    def layers(self) -> List[LayersResponse]:
+        try:
+            docker_images_layers = ["osqueryi","--json","SELECT * FROM docker_image_layers;"]
+            output = subprocess.run(docker_images_layers,capture_output=True,check=True,text=True)
+            result = json.loads(output.stdout)
+            responses = [LayersResponse(layers) for layers in result]
+            return responses
+        except subprocess.CalledProcessError as e:  
+            print(e.cmd)
+    def imageshistory(self) -> List[ImagehistoryResponse]:
+        try:
+            docker_image_history = ["osqueryi","--json","SELECT * FROM docker_image_history;"]
+            output = subprocess.run(docker_image_history,capture_output=True,check=True,text=True)
+            result = json.loads(output.stdout)
+            responses = [ImagehistoryResponse(imagehistory) for imagehistory in result]
+            return responses
+        except subprocess.CalledProcessError as e:
+            print(e.cmd)

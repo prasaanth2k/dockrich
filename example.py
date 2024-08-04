@@ -13,3 +13,11 @@ for i in images:
 volumes = docker.volumes()
 for i in volumes:
     print(i.driver)
+
+layers = docker.layers()
+for i in layers:
+    print(i.layer_id)
+
+imagehistory = docker.imageshistory()
+for i in imagehistory:
+    print(i.created_by)

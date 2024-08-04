@@ -23,7 +23,10 @@ class Monisys:
         table.add_row(" ", "Monisys", style="purple")
         table.add_row(" ", " ")
         table.add_row("-h, --help", "Show this help message and exit")
-        table.add_row("--ps","Show all running containers")
+        table.add_row("-r, --ps","Show all running docker containers")
+        table.add_row("-i, --images","Show all docker images")
+        table.add_row("-v, --volumes","Show all the docker volumes volumes")
+        table.add_row("-l, --layers","Show all the docker image layers")
         panel = Panel(
             table, title="[Options]", title_align="left", border_style="bold white"
         )
