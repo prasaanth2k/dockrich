@@ -37,3 +37,9 @@ monisys -l or --layers
 monisys -ih or monisys --image-history
 ```
 ![imagehistory](https://github.com/user-attachments/assets/8bd71909-22a6-43c1-b6d3-563d7e0107cf)
+
+### Display the docker mounts
+```bash
+monisys -dm or --docker-mounts
+```
+![dockermounts](https://github.com/user-attachments/assets/89019408-70a7-47fc-9a0d-5dd904d1e295)
