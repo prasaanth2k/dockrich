@@ -47,3 +47,12 @@ class Dockermanagecli:
             return result
         except subprocess.CalledProcessError as e:
             print(e.cmd)
+
+    def docker_mounts(self):
+        try:
+            docker_mount = ["osqueryi", "--json", "SELECT * FROM docker_container_mounts;"]
+            output = subprocess.run(docker_mount, capture_output=True, check=True, text=True)
+            result = json.loads(output.stdout)
+            return result
+        except subprocess.CalledProcessError as e:
+            print(e.cmd)

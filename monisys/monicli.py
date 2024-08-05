@@ -28,6 +28,7 @@ class Monisys:
         table.add_row("-v, --volumes","Show all the docker volumes volumes")
         table.add_row("-l, --layers","Show all the docker image layers")
         table.add_row("-ih, --image-history","Show all image history")
+        table.add_row("-dm, --docker-mounts","Show all the docker mounts")
         panel = Panel(
             table, title="[Options]", title_align="left", border_style="bold white"
         )

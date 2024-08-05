@@ -115,3 +115,32 @@ class Managers:
                 console.print(table)
             else:
                 print("[bold white][*] No image history available[/bold white]")
+
+        if self.args.hasOptions(['-dm']) or self.args.hasOptions(['--docker-mounts']):
+            docker_mounts = Dock.docker_mounts()
+            if docker_mounts:
+                table = Table(title="Docker mounts")
+                table.add_column("Destination", justify="left", style="cyan")
+                table.add_column("Driver", justify="left", style="magenta")
+                table.add_column("ID", justify="left", style="cyan")
+                table.add_column("Mode", justify="left", style="magenta")
+                table.add_column("Name", justify="left", style="cyan")
+                table.add_column("Propagation", justify="left", style="cyan")
+                table.add_column("RW", justify="left", style="magenta")
+                table.add_column("Source", justify="left", style="cyan")
+                table.add_column("Type", justify="left", style="cyan")
+                for docker_mount in docker_mounts:
+                    table.add_row(
+                        docker_mount['destination'],
+                        docker_mount['driver'],
+                        docker_mount['id'],
+                        docker_mount['mode'],
+                        docker_mount['name'],
+                        docker_mount['propagation'],
+                        docker_mount['rw'],
+                        docker_mount['source'],
+                        docker_mount['type']
+                    )
+                console.print(table)
+            else:
+                console.print("[bold white][*] No mounts available[/bold white]")

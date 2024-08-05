@@ -60,6 +60,18 @@ class ImagehistoryResponse:
         self.id = data.get("id")
         self.size = data.get("size")
         self.tags = data.get("tags")
+
+class Dockermountsresponse:
+    def __init__(self,data:dict):
+        self.destination = data.get("destination")
+        self.driver = data.get("driver")
+        self.id = data.get("id")
+        self.mode = data.get("mode")
+        self.name = data.get("name")
+        self.propagation = data.get("propagation")
+        self.rw = data.get("rw")
+        self.source = data.get("source")
+        self.type = data.get("type")
 class Dockermanage:
     def ps(self) -> List[ContainerResponse]:
         try:
@@ -108,6 +120,16 @@ class Dockermanage:
             output = subprocess.run(docker_image_history,capture_output=True,check=True,text=True)
             result = json.loads(output.stdout)
             responses = [ImagehistoryResponse(imagehistory) for imagehistory in result]
+            return responses
+        except subprocess.CalledProcessError as e:
+            print(e.cmd)
+
+    def dockermounts(self) -> List[Dockermountsresponse]:
+        try:
+            docker_mount = ["osqueryi", "--json", "SELECT * FROM docker_container_mounts;"]
+            output = subprocess.run(docker_mount, capture_output=True, check=True, text=True)
+            result = json.loads(output.stdout)
+            responses = [Dockermountsresponse(dockermounts) for dockermounts in result]
             return responses
         except subprocess.CalledProcessError as e:
             print(e.cmd)

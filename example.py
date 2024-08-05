@@ -21,3 +21,7 @@ for i in layers:
 imagehistory = docker.imageshistory()
 for i in imagehistory:
     print(i.created_by)
+
+dockermounts = docker.dockermounts()
+for i in dockermounts:
+    print(i.propagation)
