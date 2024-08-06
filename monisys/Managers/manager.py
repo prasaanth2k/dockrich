@@ -1,10 +1,12 @@
 from monisys.Managers.Arguments import Arguments
 from monisys.Managers.dockerclimanager import Dockermanagecli
+from monisys.Managers.essentialsclimanager import EssentialsManagercli
 from rich.console import Console
 from rich.table import Table
 from rich import print
 import math
 
+Essenitals = EssentialsManagercli()
 Dock = Dockermanagecli()
 console = Console()
 
@@ -144,3 +146,41 @@ class Managers:
                 console.print(table)
             else:
                 console.print("[bold white][*] No mounts available[/bold white]")
+        
+        if self.args.hasOptions(['-acp']) or self.args.hasOptions(['--acpi-tables']):
+            acpi_tables = Essenitals.acpi_tables()
+            if acpi_tables:
+                table = Table(title="Advanced Configuration and Power Interface (ACPI)")
+                table.add_column("MD5", justify="left", style="cyan")
+                table.add_column("Name", justify="left", style="magenta")
+                table.add_column("Size", justify="left", style="cyan")
+                for acpi in acpi_tables:
+                    table.add_row(
+                        acpi['md5'],
+                        acpi['name'],
+                        acpi['size']
+                    )
+                console.print(table)
+            else:
+                console.print("[bold white][*] No acpi_tables available[/bold white]")
+        
+        if self.args.hasOptions(['-aap']) or self.args.hasOptions(['--apparmor']):
+            apparmor_profiles = Essenitals.apparmor_profiles()
+            if apparmor_profiles:
+                table = Table(title="Apparmor profiles")
+                table.add_column("Attach", justify="left", style="cyan")
+                table.add_column("Mode", justify="left", style="magenta")
+                table.add_column("Name", justify="left", style="cyan")
+                table.add_column("Path", justify="left", style="magenta")
+                table.add_column("Sha1", justify="left", style="magenta")
+                for apparmor in apparmor_profiles:
+                    table.add_row(
+                        apparmor['attach'],
+                        apparmor['mode'],
+                        apparmor['name'],
+                        apparmor['path'],
+                        apparmor['sha1']
+                    )
+                console.print(table)
+            else:
+                console.print("[bold white][*] No apparmor_profiles available[/bold white]")

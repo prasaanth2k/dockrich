@@ -29,6 +29,8 @@ class Monisys:
         table.add_row("-l, --layers","Show all the docker image layers")
         table.add_row("-ih, --image-history","Show all image history")
         table.add_row("-dm, --docker-mounts","Show all the docker mounts")
+        table.add_row("-acp,--acpi_tables","Show advanced configiration power interface")
+        table.add_row("-aap,--apparmor_profiles","Show app armor profiles")
         panel = Panel(
             table, title="[Options]", title_align="left", border_style="bold white"
         )
