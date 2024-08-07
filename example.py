@@ -1,7 +1,7 @@
 from monisys.Managers.dockermanager import Dockermanage
-
+from monisys.Managers.essentialsmanager import EssentialsManager
 docker = Dockermanage()
-
+essentials = EssentialsManager()
 ps = docker.ps()
 for i in ps:
     print(i.id)
@@ -25,3 +25,11 @@ for i in imagehistory:
 dockermounts = docker.dockermounts()
 for i in dockermounts:
     print(i.propagation)
+
+acpi = essentials.acpi_tables()
+for i in acpi:
+    print(i.size)
+
+apparmot = essentials.apparmor_profiles()
+for i in apparmot:
+    print(i.sha1)
