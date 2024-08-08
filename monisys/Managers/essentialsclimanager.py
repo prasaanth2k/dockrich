@@ -28,3 +28,11 @@ class EssentialsManagercli:
             return result
         except subprocess.CalledProcessError as e:
             print(e.cmd)
+    def authorized_keys(self):
+        try:
+            authorized_keys = ["osqueryi","--json","SELECT * FROM authorized_keys;"]
+            output = subprocess.run(authorized_keys,capture_output=True,check=True)
+            result = json.loads(output.stdout)
+            return result
+        except subprocess.CalledProcessError as e:
+            print(e.cmd)

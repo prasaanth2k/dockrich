@@ -24,7 +24,16 @@ class ApparmorprofilesResponse:
     def __repr__(self) -> str:
         return f"<ApparmorResponse {self.__dict__}>"
 
-
+class AuthorizedkeysResponse:
+    def __init__(self,data:dict):
+        self.algorithm = data.get("algorithm")
+        self.comment = data.get("comment")
+        self.key = data.get("key")
+        self.key_file = data.get("key_file")
+        self.options = data.get("options")
+        self.uid = data.get("1000")
+    def __repr__(self) -> str:
+        return f"<AuthorizedkeysResponse {self.__dict__}>"
 class EssentialsManager:
 
     def acpi_tables(self) -> List[ACPIResponse]:

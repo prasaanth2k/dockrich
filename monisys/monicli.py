@@ -31,6 +31,7 @@ class Monisys:
         table.add_row("-dm, --docker-mounts","Show all the docker mounts")
         table.add_row("-acp,--acpi-tables","Show advanced configiration power interface")
         table.add_row("-aap,--apparmor","Show app armor profiles")
+        table.add_row("-auk,--authorized_keys","List all the Authorized_Keys")
         panel = Panel(
             table, title="[Options]", title_align="left", border_style="bold white"
         )

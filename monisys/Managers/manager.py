@@ -184,3 +184,25 @@ class Managers:
                 console.print(table)
             else:
                 console.print("[bold white][*] No apparmor_profiles available[/bold white]")
+        if self.args.hasOptions(['-auk']) or self.args.hasOptions(['--authorized_keys']):
+            authorized_keys = Essenitals.authorized_keys()
+            if authorized_keys:
+                table = Table(title="Authorized keys")
+                table.add_column("Algorithm", justify="left", style="cyan")
+                table.add_column("Comment", justify="left", style="magenta")
+                table.add_column("Key", justify="left", style="cyan")
+                table.add_column("Key File", justify="left", style="magenta")
+                table.add_column("Options", justify="left", style="magenta")
+                table.add_column("Uid", justify="left", style="cyan")
+                for authkeys in authorized_keys:
+                    table.add_row(
+                        authkeys['algorithm'],
+                        authkeys['comment'],
+                        authkeys['key'],
+                        authkeys['key_file'],
+                        authkeys['options'],
+                        authkeys['uid']
+                    )
+                console.print(table)
+            else:
+                console.print("[bold white][*] No authkeys available[/bold white]")
