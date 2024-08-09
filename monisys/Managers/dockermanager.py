@@ -2,8 +2,11 @@ import subprocess
 import json
 from typing import List
 
+
 class ContainerResponse:
-    def __init__(self, data: dict):
+    def __init__(self, data=None):
+        if data is None:
+            data = self.fetch_container_data()
         self.cgroup_namespace = data.get("cgroup_namespace")
         self.command = data.get("command")
         self.config_entrypoint = data.get("config_entrypoint")
@@ -29,31 +32,92 @@ class ContainerResponse:
         self.user_namespace = data.get("user_namespace")
         self.uts_namespace = data.get("uts_namespace")
 
+    def fetch_container_data(self):
+        try:
+            docker_containers = ["osqueryi", "--json", "SELECT * FROM docker_containers;"]
+            output = subprocess.run(docker_containers, capture_output=True, check=True, text=True)
+            result = json.loads(output.stdout)
+            return result[0] if result else {}
+        except subprocess.CalledProcessError as e:
+            print(f"Error running command {e.cmd}: {e.output}")
+            return {}
+
     def __repr__(self) -> str:  
         return f"<ContainerResponse {self.__dict__}>"
 
+
 class ImageResponse:
-    def __init__(self, data: dict):
+    def __init__(self, data=None):
+        if data is None:
+            data = self.fetch_image_data()
         self.id = data.get("id")
         self.created = data.get("created")
         self.size_bytes = data.get("size_bytes")
         self.tags = data.get("tags")
-    
+
+    def fetch_image_data(self):
+        try:
+            docker_images = ["osqueryi", "--json", "SELECT * FROM docker_images;"]
+            output = subprocess.run(docker_images, capture_output=True, check=True, text=True)
+            result = json.loads(output.stdout)
+            return result[0] if result else {}
+        except subprocess.CalledProcessError as e:
+            print(f"Error running command {e.cmd}: {e.output}")
+            return {}
+
     def __repr__(self) -> str:
         return f"<ImageResponse {self.__dict__}>"
+
+
 class VolumeResponse:
-    def __init__(self,data:dict):
+    def __init__(self, data=None):
+        if data is None:
+            data = self.fetch_volume_data()
         self.driver = data.get("driver")
         self.mount_point = data.get("mount_point")
         self.name = data.get("name")
         self.type = data.get("type")
+
+    def fetch_volume_data(self):
+        try:
+            docker_volumes = ["osqueryi", "--json", "SELECT * FROM docker_volumes;"]
+            output = subprocess.run(docker_volumes, capture_output=True, check=True, text=True)
+            result = json.loads(output.stdout)
+            return result[0] if result else {}
+        except subprocess.CalledProcessError as e:
+            print(f"Error running command {e.cmd}: {e.output}")
+            return {}
+
+    def __repr__(self) -> str:
+        return f"<VolumeResponse {self.__dict__}>"
+
+
 class LayersResponse:
-    def __init__(self,data:dict):
+    def __init__(self, data=None):
+        if data is None:
+            data = self.fetch_layers_data()
         self.id = data.get("id")
         self.layer_id = data.get("layer_id")
         self.layer_order = data.get("layer_order")
+
+    def fetch_layers_data(self):
+        try:
+            docker_images_layers = ["osqueryi", "--json", "SELECT * FROM docker_image_layers;"]
+            output = subprocess.run(docker_images_layers, capture_output=True, check=True, text=True)
+            result = json.loads(output.stdout)
+            return result[0] if result else {}
+        except subprocess.CalledProcessError as e:
+            print(f"Error running command {e.cmd}: {e.output}")
+            return {}
+
+    def __repr__(self) -> str:
+        return f"<LayersResponse {self.__dict__}>"
+
+
 class ImagehistoryResponse:
-    def __init__(self,data:dict):
+    def __init__(self, data=None):
+        if data is None:
+            data = self.fetch_imagehistory_data()
         self.comment = data.get("comment")
         self.created = data.get("created")
         self.created_by = data.get("created_by")
@@ -61,8 +125,24 @@ class ImagehistoryResponse:
         self.size = data.get("size")
         self.tags = data.get("tags")
 
+    def fetch_imagehistory_data(self):
+        try:
+            docker_image_history = ["osqueryi", "--json", "SELECT * FROM docker_image_history;"]
+            output = subprocess.run(docker_image_history, capture_output=True, check=True, text=True)
+            result = json.loads(output.stdout)
+            return result[0] if result else {}
+        except subprocess.CalledProcessError as e:
+            print(f"Error running command {e.cmd}: {e.output}")
+            return {}
+
+    def __repr__(self) -> str:
+        return f"<ImagehistoryResponse {self.__dict__}>"
+
+
 class Dockermountsresponse:
-    def __init__(self,data:dict):
+    def __init__(self, data=None):
+        if data is None:
+            data = self.fetch_dockermounts_data()
         self.destination = data.get("destination")
         self.driver = data.get("driver")
         self.id = data.get("id")
@@ -72,6 +152,21 @@ class Dockermountsresponse:
         self.rw = data.get("rw")
         self.source = data.get("source")
         self.type = data.get("type")
+
+    def fetch_dockermounts_data(self):
+        try:
+            docker_mount = ["osqueryi", "--json", "SELECT * FROM docker_container_mounts;"]
+            output = subprocess.run(docker_mount, capture_output=True, check=True, text=True)
+            result = json.loads(output.stdout)
+            return result[0] if result else {}
+        except subprocess.CalledProcessError as e:
+            print(f"Error running command {e.cmd}: {e.output}")
+            return {}
+
+    def __repr__(self) -> str:
+        return f"<Dockermountsresponse {self.__dict__}>"
+
+
 class Dockermanage:
     def ps(self) -> List[ContainerResponse]:
         try:
@@ -97,32 +192,36 @@ class Dockermanage:
         
     def volumes(self) -> List[VolumeResponse]:
         try:
-            docker_volumes = ["osqueryi","--json","SELECT * FROM docker_volumes;"]
-            output = subprocess.run(docker_volumes,capture_output=True,check=True,text=True)
+            docker_volumes = ["osqueryi", "--json", "SELECT * FROM docker_volumes;"]
+            output = subprocess.run(docker_volumes, capture_output=True, check=True, text=True)
             result = json.loads(output.stdout)
             responses = [VolumeResponse(volume) for volume in result]
             return responses
         except subprocess.CalledProcessError as e:
             print(f"Error running command {e.cmd}: {e.output}")
             return []
+
     def layers(self) -> List[LayersResponse]:
         try:
-            docker_images_layers = ["osqueryi","--json","SELECT * FROM docker_image_layers;"]
-            output = subprocess.run(docker_images_layers,capture_output=True,check=True,text=True)
+            docker_images_layers = ["osqueryi", "--json", "SELECT * FROM docker_image_layers;"]
+            output = subprocess.run(docker_images_layers, capture_output=True, check=True, text=True)
             result = json.loads(output.stdout)
-            responses = [LayersResponse(layers) for layers in result]
+            responses = [LayersResponse(layer) for layer in result]
             return responses
         except subprocess.CalledProcessError as e:  
-            print(e.cmd)
+            print(f"Error running command {e.cmd}: {e.output}")
+            return []
+
     def imageshistory(self) -> List[ImagehistoryResponse]:
         try:
-            docker_image_history = ["osqueryi","--json","SELECT * FROM docker_image_history;"]
-            output = subprocess.run(docker_image_history,capture_output=True,check=True,text=True)
+            docker_image_history = ["osqueryi", "--json", "SELECT * FROM docker_image_history;"]
+            output = subprocess.run(docker_image_history, capture_output=True, check=True, text=True)
             result = json.loads(output.stdout)
             responses = [ImagehistoryResponse(imagehistory) for imagehistory in result]
             return responses
         except subprocess.CalledProcessError as e:
-            print(e.cmd)
+            print(f"Error running command {e.cmd}: {e.output}")
+            return []
 
     def dockermounts(self) -> List[Dockermountsresponse]:
         try:
@@ -132,4 +231,5 @@ class Dockermanage:
             responses = [Dockermountsresponse(dockermounts) for dockermounts in result]
             return responses
         except subprocess.CalledProcessError as e:
-            print(e.cmd)
+            print(f"Error running command {e.cmd}: {e.output}")
+            return []
