@@ -31,4 +31,25 @@ class Cpuinforesponse:
 
     def __repr__(self) -> str:
         return f"<Cpuinforesponse {self.__dict__}>"
-
+class CpuidResponse:
+    def __init__(self, data=None):
+        if data is None:
+            # Fetch CPU info automatically if no data is provided
+            data = self.fetch_cpuid()
+        self.feature = data.get("feature")
+        self.input_eax = data.get("input_eax")
+        self.output_bit = data.get("output_bit")
+        self.output_register = data.get("output_register")
+        self.value = data.get("value")
+        
+    def fetch_cpuid(self):
+        try:
+            cpuid = ["osqueryi", "--json", "SELECT * FROM cpuid;"]
+            output = subprocess.run(cpuid,capture_output=True,check=True,text=True)
+            result = json.loads(output.stdout)
+            return result[0] if result else {}
+        except subprocess.CalledProcessError as e:
+            print(f"Error running command {e.cmd}: {e.output}")
+            return {}
+    def __repr__(self) -> str:
+        return f"<Cpuid {self.__dict__}>"
