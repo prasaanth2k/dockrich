@@ -23,6 +23,7 @@ class Monisys:
         table.add_row(" ", "Monisys", style="purple")
         table.add_row(" ", " ")
         table.add_row("-h, --help", "Show this help message and exit")
+        table.add_row("-cl,--cpulive","Show cputime in live time")
         panel = Panel(
             table, title="[Options]", title_align="left", border_style="bold white"
         )
