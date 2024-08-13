@@ -1,15 +1,6 @@
-from monisys.Managers.dockermanager import Dockermanage
-from monisys.Managers.essentialsmanager import EssentialsManager
-from monisys.Managers.systemresourses import Cpuinforesponse , CpuidResponse
+import time
+from monisys.Managers.Systeminfo import SystemInfo
+kernel_info = SystemInfo('uptime')
 
-# Create instances of the managers
-cpuinfo = Cpuinforesponse()
-cpuid = CpuidResponse()
-docker = Dockermanage()
-essentials = EssentialsManager()
-
-# docker_images = docker.images()
-# for image in docker_images:
-#     print(image.id)
-
-print(cpuinfo.manufacturer)
+names = kernel_info.get_all_data()
+print(names)
