@@ -6,5 +6,5 @@ class Managers:
     def __init__(self,args:Arguments):
         self.args = args
 
-        if self.args.hasOptions(['--cpulive'] or self.args.hasOptions(['-cl'])):
+        if self.args.hasOptions(["--cpulive"]) or self.args.hasOptions(["-cl"]):
             system.display_uptime()
