@@ -1,0 +1,7 @@
+#!/usr/bin/python3
+import time
+from monisys.Managers.Systeminfo import SystemInfo
+system_info = SystemInfo('cpu_info')
+
+names = system_info.get_all_data()
+print(names)
