@@ -4,7 +4,7 @@
 ```bash
 monisys -h or  --help
 ```
-![helpmessage](https://github.com/user-attachments/assets/94eec1ca-49ed-4fdd-bd73-01c7959152a9)
+![helpmessage](/images/helpmessage.png)
 
 
 ```python3
