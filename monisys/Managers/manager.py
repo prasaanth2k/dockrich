@@ -10,3 +10,5 @@ class Managers:
             system.display_uptime()
         if self.args.hasOptions(["--kernal-info"]) or self.args.hasOptions(["-ki"]):
             system.display_kernel_info()
+        if self.args.hasOptions(["--os_info"]) or self.args.hasOptions(["-ov"]):
+            system.display_osinfo_info()

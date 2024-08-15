@@ -1,5 +1,10 @@
 ### Monisys - Moiniter entore os things
 
+
+Install as sudo 
+```bash
+sudo pip install monisys
+```
 ### Help message 
 ```bash
 monisys -h or  --help
