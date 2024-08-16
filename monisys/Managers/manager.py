@@ -6,9 +6,11 @@ class Managers:
     def __init__(self,args:Arguments):
         self.args = args
 
-        if self.args.hasOptions(["--cpulive"]) or self.args.hasOptions(["-cl"]):
+        if self.args.hasOptions(["--cpulive"]) or self.args.hasOptions(["-ci"]):
             system.display_uptime()
         if self.args.hasOptions(["--kernal-info"]) or self.args.hasOptions(["-ki"]):
             system.display_kernel_info()
-        if self.args.hasOptions(["--os_info"]) or self.args.hasOptions(["-ov"]):
+        if self.args.hasOptions(["--os-info"]) or self.args.hasOptions(["-ov"]):
             system.display_osinfo_info()
+        if self.args.hasOptions(["--system-info"]) or self.args.hasOptions(["-si"]):
+            system.display_system_info()

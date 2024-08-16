@@ -9,6 +9,7 @@ class SystemInfoCLI:
         self.cpu_info = SystemInfo('cpu_info')
         self.kernel_info = SystemInfo('kernel_info')
         self.os_version = SystemInfo('os_version')
+        self.system_info = SystemInfo('system_info')
         self.console = Console()
 
     def get_cpuinfo(self):
@@ -49,6 +50,18 @@ class SystemInfoCLI:
 
         return (arch, build, codename, minor, name, patch,
                 platform, platform_like, version)
+
+    def get_system_info(self):
+        computer_name = self.system_info.get_values_by_key('computer_name')
+        cpu_brand = self.system_info.get_values_by_key('cpu_brand')
+        cpu_logical_cores = self.system_info.get_values_by_key('cpu_logical_cores')
+        cpu_microcode = self.system_info.get_values_by_key('cpu_microcode')
+        cpu_physical_cores = self.system_info.get_values_by_key('cpu_physical_cores')
+        cpu_sockets = self.system_info.get_values_by_key('cpu_sockets')
+        physical_memory = self.system_info.get_values_by_key('physical_memory')
+        cpu_type = self.system_info.get_values_by_key('cpu_type')
+
+        return computer_name,cpu_brand,cpu_logical_cores,cpu_microcode,cpu_physical_cores,cpu_sockets,physical_memory,cpu_type
 
     def display_uptime(self):
         try:
@@ -94,6 +107,24 @@ class SystemInfoCLI:
                 f"Version : {os_info[8]}\n"
             )
             panel = Panel("[bold]" + os_info_str + "[/bold]", title="OS INFO", style="white", expand=False)
+            self.console.print(panel)
+        except Exception as e:
+            print(e)
+
+    def display_system_info(self):
+        try:
+            system_info = self.get_system_info()
+            system_info_str =  (
+                f"Computer Name: {system_info[0]}\n"
+                f"CPU Brand : {system_info[1]}\n"
+                f"CPU Logical cores : {system_info[2]}\n"
+                f"CPU micro codes : {system_info[3]}\n"
+                f"CPU Physical Cores  : {system_info[4]}\n"
+                f"CPU Sockets : {system_info[5]}\n"
+                f"Physical Memory : {system_info[6]}\n"
+                f"CPU type : {system_info[7]}\n"
+            )
+            panel = Panel("[bold]" + system_info_str + "[/bold]", title="System INFO", style="white", expand=False)
             self.console.print(panel)
         except Exception as e:
             print(e)
