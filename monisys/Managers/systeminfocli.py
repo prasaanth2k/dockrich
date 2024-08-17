@@ -10,6 +10,7 @@ class SystemInfoCLI:
         self.kernel_info = SystemInfo('kernel_info')
         self.os_version = SystemInfo('os_version')
         self.system_info = SystemInfo('system_info')
+        self.loadaverage = SystemInfo('load_average')
         self.console = Console()
 
     def get_cpuinfo(self):
@@ -63,6 +64,12 @@ class SystemInfoCLI:
 
         return computer_name,cpu_brand,cpu_logical_cores,cpu_microcode,cpu_physical_cores,cpu_sockets,physical_memory,cpu_type
 
+    def get_load_average(self):
+        totalload = self.loadaverage.get_all_data()
+        onemin = totalload[0].get('average')
+        fivmin = totalload[1].get('average')
+        fifteenmin = totalload[2].get('average')
+        return onemin,fivmin,fifteenmin
     def display_uptime(self):
         try:
             cpu_info = self.get_cpuinfo()
@@ -125,6 +132,18 @@ class SystemInfoCLI:
                 f"CPU type : {system_info[7]}\n"
             )
             panel = Panel("[bold]" + system_info_str + "[/bold]", title="System INFO", style="white", expand=False)
+            self.console.print(panel)
+        except Exception as e:
+            print(e)
+    def display_loadaverage_info(self):
+        try:
+            loadavg_info = self.get_load_average()
+            loadavg_info_str =  (
+                f"One Min: {loadavg_info[0]}\n"
+                f"Five Min : {loadavg_info[1]}\n"
+                f"Fifteen Min : {loadavg_info[2]}\n"
+            )
+            panel = Panel("[bold]" + loadavg_info_str + "[/bold]", title="Loadavg INFO", style="white", expand=False)
             self.console.print(panel)
         except Exception as e:
             print(e)

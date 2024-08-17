@@ -14,3 +14,5 @@ class Managers:
             system.display_osinfo_info()
         if self.args.hasOptions(["--system-info"]) or self.args.hasOptions(["-si"]):
             system.display_system_info()
+        if self.args.hasOptions(["--load-average"]) or self.args.hasOptions(["-la"]):
+            system.display_loadaverage_info()
