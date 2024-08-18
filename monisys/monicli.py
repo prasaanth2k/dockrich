@@ -28,6 +28,7 @@ class Monisys:
         table.add_row("-ov,--os_info","Show the osversion info")
         table.add_row("-si,--system-info","Show the system info")
         table.add_row("-la,--load-average","Show the load average")
+        table.add_row("-ud,--display-usbdevices","Show the usb devices")
         panel = Panel(
             table, title="[Options]", title_align="left", border_style="bold white"
         )

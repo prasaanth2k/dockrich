@@ -11,6 +11,7 @@ class SystemInfoCLI:
         self.os_version = SystemInfo('os_version')
         self.system_info = SystemInfo('system_info')
         self.loadaverage = SystemInfo('load_average')
+        self.usb_devices = SystemInfo('usb_devices')
         self.console = Console()
 
     def get_cpuinfo(self):
@@ -70,6 +71,9 @@ class SystemInfoCLI:
         fivmin = totalload[1].get('average')
         fifteenmin = totalload[2].get('average')
         return onemin,fivmin,fifteenmin
+    def get_usb_devices(self):
+        usbdevices = self.usb_devices.get_values_by_key('model')
+        return usbdevices
     def display_uptime(self):
         try:
             cpu_info = self.get_cpuinfo()
@@ -144,6 +148,14 @@ class SystemInfoCLI:
                 f"Fifteen Min : {loadavg_info[2]}\n"
             )
             panel = Panel("[bold]" + loadavg_info_str + "[/bold]", title="Loadavg INFO", style="white", expand=False)
+            self.console.print(panel)
+        except Exception as e:
+            print(e)
+    def display_usb_devices(self):
+        try:
+            usbdevices = self.display_usb_devices()
+            usbdevices_str = "\n".join(usbdevices)
+            panel = Panel("[bold]" + usbdevices_str + "[/bold]", title="USB Info", style="white", expand=False)
             self.console.print(panel)
         except Exception as e:
             print(e)

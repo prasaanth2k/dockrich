@@ -16,3 +16,5 @@ class Managers:
             system.display_system_info()
         if self.args.hasOptions(["--load-average"]) or self.args.hasOptions(["-la"]):
             system.display_loadaverage_info()
+        if self.args.hasOptions(["--display-usbdevices"]) or self.args.hasOptions(["-ud"]):
+            system.display_usb_devices()

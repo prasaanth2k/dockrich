@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 import time
 from monisys.Managers.Systeminfo import SystemInfo
-system_info = SystemInfo('load_average')
+system_info = SystemInfo('usb_devices')
 
-cpuinfos = system_info.get_all_data()
-print(cpuinfos[0].get('average'))
+cpuinfos = system_info.get_values_by_key('model')
+# print(cpuinfos[1].get('subsystem'))
+print(len(cpuinfos))
