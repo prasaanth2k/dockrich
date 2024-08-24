@@ -14,6 +14,7 @@ class SystemInfoCLI:
         self.loadaverage = SystemInfo("load_average")
         self.usb_devices = SystemInfo("usb_devices")
         self.periferal_com = SystemInfo("pci_devices")
+        self.uptime = SystemInfo("uptime")
         self.console = Console()
 
     def get_cpuinfo(self):
@@ -109,6 +110,15 @@ class SystemInfoCLI:
     def get_peripheral_devices(self):
         peripheral_com = self.periferal_com.get_values_by_key("driver")
         return peripheral_com
+
+    def get_cpu_uptime(self):
+        uptime = self.uptime.get_all_data()
+        days = uptime[0].get("days")
+        hours = uptime[0].get("hours")
+        minutes = uptime[0].get("minutes")
+        seconds = uptime[0].get("seconds")
+        total_seconds = uptime[0].get("total_seconds")
+        return days, hours, minutes,seconds, total_seconds
 
     def display_uptime(self):
         try:
@@ -235,6 +245,26 @@ class SystemInfoCLI:
             panel = Panel(
                 "[bold]" + peripheral_compo_str + "[/bold]",
                 title="Pci Comp Info",
+                style="white",
+                expand=False,
+            )
+            self.console.print(panel)
+        except Exception as e:
+            print(e)
+
+    def display_uptime(self):
+        try:
+            deviceuptime = self.get_cpu_uptime()
+            deviceuptimestr = (
+                f"Days : {deviceuptime[0]}\n"
+                f"Hours : {deviceuptime[1]}\n"
+                f"Minutes : {deviceuptime[2]}\n"
+                f"Seconds : {deviceuptime[3]}\n"
+                f"Total Seconds : {deviceuptime[4]}\n"
+            )
+            panel = Panel(
+                "[bold]" + deviceuptimestr + "[/bold]",
+                title="UP TIME",
                 style="white",
                 expand=False,
             )

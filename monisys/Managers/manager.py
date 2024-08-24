@@ -18,5 +18,7 @@ class Managers:
             system.display_loadaverage_info()
         if self.args.hasOptions(["--display-usbdevices"]) or self.args.hasOptions(["-ud"]):
             system.display_usb_devices()
-        if self.args.hasOptions(["--display_peripheral_compo"]) or self.args.hasOptions(["-dp"]):
+        if self.args.hasOptions(["--display-peripheral_compo"]) or self.args.hasOptions(["-dp"]):
             system.display_peripheral_compo()
+        if self.args.hasOptions(["--display-uptime"]) or self.args.hasOptions(["-ut"]):
+            system.display_uptime()
