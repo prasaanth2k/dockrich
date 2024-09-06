@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-
+# for test fix
 setup(
     name="monisys",
     version="0.2",
@@ -21,7 +21,7 @@ setup(
     url="https://github.com/prasaanth2k/monisys",
     license="MIT",
     classifiers=[
-        "License :: OSI Approved :: MIT License"
+        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3.9",
     ],
 )
