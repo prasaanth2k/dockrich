@@ -1,9 +1,10 @@
 import time
 from rich.console import Console
 from rich.live import Live
+from rich.table import Table
 from rich.panel import Panel
 from monisys.Managers.Systeminfo import SystemInfo
-
+import datetime
 
 class SystemInfoCLI:
     def __init__(self):
@@ -15,6 +16,7 @@ class SystemInfoCLI:
         self.usb_devices = SystemInfo("usb_devices")
         self.periferal_com = SystemInfo("pci_devices")
         self.uptime = SystemInfo("uptime")
+        self.docker_images = SystemInfo("docker_images")
         self.console = Console()
 
     def get_cpuinfo(self):
@@ -271,3 +273,22 @@ class SystemInfoCLI:
             self.console.print(panel)
         except Exception as e:
             print(e)
+    def get_docker_images(self):
+        dockerimages = self.docker_images.get_all_data()
+        console = Console()
+        table = Table(title="Docker Images", show_header=True, header_style="bold magenta", show_lines=True)
+        
+        table.add_column("TAGS",style="cyan")
+        table.add_column("CREATED",style="yellow")
+        table.add_column("ID",style="bold green")
+        table.add_column("SIZE (MB)",style="green")
+        
+        for image in dockerimages:
+            tags = image['tags']
+            created = image['created']
+            image_id = image['id']
+            size_mb = round(int(image['size_bytes']) / (1024 * 1024), 2)
+            
+            table.add_row(tags, created, image_id, f"{size_mb} MB")
+        
+        console.print(table)

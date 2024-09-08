@@ -25,12 +25,12 @@ class Monisys:
         table.add_row("-h, --help", "Show this help message and exit")
         table.add_row("-ci,--cpu-info","Show cpu info")
         table.add_row("-ki,--kernel-info","Show the kernal information")
-        table.add_row("-ov,--os_info","Show the osversion info")
+        table.add_row("-ov,--os-info","Show the osversion info")
         table.add_row("-si,--system-info","Show the system info")
         table.add_row("-la,--load-average","Show the load average")
         table.add_row("-ut,--display-uptime","Shows the display uptime")
         table.add_row("-ud,--display-usbdevices","Show the usb devices")
-        table.add_row("-dp,--display_peripheral_compo","Show the Peripheral Components")
+        table.add_row("-dp,--display-peripheral_compo","Show the Peripheral Components")
         panel = Panel(
             table, title="[Options]", title_align="left", border_style="bold white"
         )
