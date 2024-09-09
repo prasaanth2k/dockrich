@@ -24,3 +24,5 @@ class Managers:
             system.display_uptime()
         if self.args.hasOptions(["--docker-images"]) or self.args.hasOptions(["-di"]):
             system.get_docker_images()
+        if self.args.hasOptions(["--display-running-containers"]) or self.args.hasOptions(["-rc"]):
+            system.get_all_running_containers()

@@ -17,6 +17,7 @@ class SystemInfoCLI:
         self.periferal_com = SystemInfo("pci_devices")
         self.uptime = SystemInfo("uptime")
         self.docker_images = SystemInfo("docker_images")
+        self.docker_containers = SystemInfo("docker_containers")
         self.console = Console()
 
     def get_cpuinfo(self):
@@ -290,5 +291,25 @@ class SystemInfoCLI:
             size_mb = round(int(image['size_bytes']) / (1024 * 1024), 2)
             
             table.add_row(tags, created, image_id, f"{size_mb} MB")
+        
+        console.print(table)
+
+    def get_all_running_containers(self):
+        dockerrunningcontainers = self.docker_containers.get_all_data()
+        console = Console()
+        table = Table(title="Docker Containers", show_header=True, header_style="bold magenta", show_lines=True)
+
+        table.add_column("Name",style="cyan")
+        table.add_column("State",style="yellow")
+        table.add_column("ID",style="bold green")
+        table.add_column("privileged",style="green")
+
+        for containers in dockerrunningcontainers:
+            name = containers['name']
+            state = containers['state']
+            containerid = containers['id']
+            privileged = containers['privileged']
+            
+            table.add_row(name, state, containerid, privileged)
         
         console.print(table)

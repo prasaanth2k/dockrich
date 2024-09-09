@@ -31,6 +31,8 @@ class Monisys:
         table.add_row("-ut,--display-uptime","Shows the display uptime")
         table.add_row("-ud,--display-usbdevices","Show the usb devices")
         table.add_row("-dp,--display-peripheral_compo","Show the Peripheral Components")
+        table.add_row("-di,--docker-images","Show the docker images")
+        table.add_row("-rc,--display-running-containers","Show the running docker containers")
         panel = Panel(
             table, title="[Options]", title_align="left", border_style="bold white"
         )
